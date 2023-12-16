@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Home Page</title>
+
+    <style>
+        /* Add custom styling for buttons and centering */
+        body {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            margin: 0;
+            background-color: #e6ffe6; /* Light green background */
+            background-image: url('https://gumlet.assettype.com/thequint%2F2018-05%2Fce4bfdb9-3220-4c90-81f3-13446607894a%2FZidane.jpg?auto=format%2Ccompress&w=640');
+            background-repeat: no-repeat;
+            background-size: 50% 100%;
+            background-position: center center;
+
+        }
+
+        .container {
+            text-align: center;
+        }
+
+        h1 {
+            margin-top: -10px; /* Adjust the margin to move the text up */
+            color: #d1f4b7;
+            text-shadow: 2px 2px 4px #000000;
+        }
+
+        .btn-container {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            margin-top: 20px;
+        }
+
+        .btn-container a {
+            display: inline-block;
+            margin-bottom: 15px;
+            padding: 10px 20px;
+            margin-right: 20px; /* Adjust the margin to increase spacing */
+            text-decoration: none;
+            color: #fff;
+            background-color: #4caf50; /* Stronger green for buttons */
+            border: 1px solid #4caf50;
+            border-radius: 5px;
+            box-shadow: 2px 2px 4px #000000; /* Box shadow for buttons */
+            transition: background-color 0.3s ease-in-out;
+            /* Replace with your online image URL */
+            background-size: cover;
+            background-position: center;
+        }
+
+        .btn-container a:hover {
+            background-color: #45a049; /* Darker green on hover */
+            border-color: #45a049;
+        }
+
+    </style>
+</head>
+<body>
+<div class="container mt-5">
+    <h1 th:text="${message}">Welcome to CoachBoard!</h1>
+
+
+    <!-- Link to the admin page with custom styling -->
+    <div class="btn-container">
+        <a th:href="@{/admin}">Login as Coach</a>
+        <a th:href="@{/user}">Login as other</a>
+        <a th:href="@{/formations}">Go to Formations Page</a>
+    </div>
+</div>
+</body>
+</html>

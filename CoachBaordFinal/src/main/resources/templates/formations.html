@@ -1,0 +1,147 @@
+
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CoachBoard App</title>
+</head>
+<body>
+<div style="text-align: center; padding: 20px;">
+    <h1 style="font-size: 36px;">CoachBoard App</h1>
+</div>
+
+<div class="container" style="text-align: center;">
+
+    <form th:action="@{/arrange-players}" method="post" style="margin-bottom: 20px;">
+        <label for="goalkeeper" style="color: black;">Goalkeeper:</label>
+        <input type="text" name="goalkeeper" required style="color: rgb(128,128,128);">
+
+        <label for="defenders" style="color: black;">Defenders (comma-separated):</label>
+        <input type="text" name="defenders" required style="color: rgb(128,128,128);">
+
+        <label for="midfielders" style="color: black;">Midfielders (comma-separated):</label>
+        <input type="text" name="midfielders" required style="color: rgb(128,128,128);">
+
+        <label for="forwards" style="color: black;">Forwards (comma-separated):</label>
+        <input type="text" name="forwards" required style="color: rgb(128,128,128);">
+
+        <br>
+
+        <label for="selectFormation" style="color: black;">Select Formation:</label>
+        <select name="formation" style="color: black;">
+            <option th:value="4-3-3">4-3-3</option>
+            <option th:value="4-2-3-1">4-2-3-1</option>
+            <option th:value="4-4-2">4-4-2</option>
+            <!-- Add more formations as needed -->
+        </select>
+
+
+        <br>
+        <!-- Include CSRF token -->
+        <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
+
+        <button type="submit" style="background-color: black; color: yellow; padding: 10px 20px; border: none; cursor: pointer;">Choose Formation</button>
+    </form>
+
+    <!-- Display football field -->
+    <div id="football-field" style="margin: 20px auto; position: relative; width: 200px; height: 300px; background-color: green;">
+        <!-- Display players on the football field -->
+
+
+        <!-- Case for 4-2-3-1 -->
+        <!-- Use th:switch to handle different cases -->
+        <div th:if="${result != null}" th:switch="${result.formation}">
+
+            <div th:case="${result.formation == '4-2-3-1'}">
+                <!-- Goalkeeper -->
+                <div th:style="'position: absolute; left: 50%; bottom: 3%; transform: translateX(-50%); width: 40px; height: 40px; background-color: gray; border-radius: 50%; text-align: center; line-height: 40px; color: white;'" th:text="${result.goalkeeper}"></div>
+
+                <!-- Defenders -->
+                <div th:each="defender, iterStat : ${result.defenders}" th:style="'position: absolute; left: ' + (${iterStat.index * 25} + 13) + '%; bottom: 15%; transform: translateX(-50%); width: 40px; height: 40px; background-color: blue; border-radius: 50%; text-align: center; line-height: 40px; color: white;'" th:text="${defender}"></div>
+
+                <!-- Row 3: 2 Midfield -->
+                <div th:each="midfielder, iterStat : ${result.midfielders}" th:if="${iterStat.index < 2}" th:style="'position: absolute; left: ' + (${iterStat.index * 50} + 25) + '%; bottom: 35%; transform: translateX(-50%); width: 40px; height: 40px; background-color: yellow; border-radius: 50%; text-align: center; line-height: 40px; color: black;'" th:text="${midfielder}"></div>
+
+                <!-- Row 4: 3 Midfield -->
+                <div th:each="midfielder, iterStat : ${result.midfielders}" th:if="${iterStat.index >= 2}" th:style="'position: absolute; left: ' + (${(iterStat.index - 2) * 33.3} + 33.3) + '%; bottom: 55%; transform: translateX(-50%); width: 40px; height: 40px; background-color: yellow; border-radius: 50%; text-align: center; line-height: 40px; color: black;'" th:text="${midfielder}"></div>
+
+                <!-- Row 5: 1 Forward -->
+                <div th:each="forward, iterStat : ${result.forwards}" th:style="'position: absolute; left: 50%; bottom: 75%; transform: translateX(-50%); width: 40px; height: 40px; background-color: red; border-radius: 50%; text-align: center; line-height: 40px; color: white;'" th:text="${forward}"></div>
+            </div>
+
+            <!-- Case for 4-3-3 -->
+            <div th:case="${result.formation == '4-3-3'}">
+                <!-- Goalkeeper -->
+                <div th:style="'position: absolute; left: 50%; bottom: 3%; transform: translateX(-50%); width: 40px; height: 40px; background-color: gray; border-radius: 50%; text-align: center; line-height: 40px; color: white;'"
+                     th:text="${result.goalkeeper}"></div>
+
+                <!-- Defenders -->
+                <div th:each="defender, iterStat : ${result.defenders}"
+                     th:style="'position: absolute; left: ' + (${iterStat.index * 25} + 13) + '%; bottom: 15%; transform: translateX(-50%); width: 40px; height: 40px; background-color: blue; border-radius: 50%; text-align: center; line-height: 40px; color: white;'"
+                     th:text="${defender}"></div>
+
+                <!-- Row 3: 3 Midfielders -->
+                <div th:each="midfielder, iterStat : ${result.midfielders}" th:if="${iterStat.index < 3}"
+                     th:style="'position: absolute; left: ' + (${iterStat.index * 33.3} + 13) + '%; bottom: 35%; transform: translateX(-50%); width: 40px; height: 40px; background-color: yellow; border-radius: 50%; text-align: center; line-height: 40px; color: black;'"
+                     th:text="${midfielder}"></div>
+
+                <!-- Row 4: 2 Midfielders -->
+                <div th:each="midfielder, iterStat : ${result.midfielders}"
+                     th:if="${iterStat.index >= 3 and iterStat.index < 5}"
+                     th:style="'position: absolute; left: ' + ((iterStat.index - 3) * 50 + 25) + '%; bottom: 55%; transform: translateX(-50%); width: 40px; height: 40px; background-color: yellow; border-radius: 50%; text-align: center; line-height: 40px; color: black;'"
+                     th:text="${midfielder}"></div>
+
+                <!-- Forward in Row 4 -->
+                <div th:if="${iterStat.index == 5}"
+                     th:style="'position: absolute; left: 50%; bottom: 55%; transform: translateX(-50%); width: 40px; height: 40px; background-color: red; border-radius: 50%; text-align: center; line-height: 40px; color: white;'"
+                     th:text="${result.forwards[0]}"></div>
+
+
+            </div>
+
+
+
+            <!-- Case for 4-4-2 -->
+            <!-- Goalkeeper -->
+
+            <div th:style="'position: absolute; left: 50%; bottom: 3%; transform: translateX(-50%); width: 40px; height: 40px; background-color: gray; border-radius: 50%; text-align: center; line-height: 40px; color: white;'"
+                 th:text="${result.goalkeeper}"></div>
+
+            <!-- Defenders -->
+            <div th:each="defender, iterStat : ${result.defenders}"
+                 th:style="'position: absolute; left: ' + (${iterStat.index * 25} + 13) + '%; bottom: 15%; transform: translateX(-50%); width: 40px; height: 40px; background-color: blue; border-radius: 50%; text-align: center; line-height: 40px; color: white;'"
+                 th:text="${defender}"></div>
+
+            <!-- Row 3: 4 Midfielders -->
+            <div th:each="midfielder, iterStat : ${result.midfielders}"
+                 th:style="'position: absolute; left: ' + (${iterStat.index * 25} + 13) + '%; bottom: 35%; transform: translateX(-50%); width: 40px; height: 40px; background-color: yellow; border-radius: 50%; text-align: center; line-height: 40px; color: black;'"
+                 th:text="${midfielder}"></div>
+
+            <!-- Row 4: 2 Forwards -->
+            <div th:each="forward, iterStat : ${result.forwards}"
+                 th:style="'position: absolute; left: ' + (${iterStat.index * 50} + 25) + '%; bottom: 55%; transform: translateX(-50%); width: 40px; height: 40px; background-color: red; border-radius: 50%; text-align: center; line-height: 40px; color: white;'"
+                 th:text="${forward}"></div>
+
+        </div>
+    </div>
+
+
+
+
+
+    <!-- Display result or error -->
+    <div th:if="${result}" class="result" style="background-color: white; padding: 20px; border-radius: 10px; box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);">
+        <h2 th:text="${'Arranged Formation (' + result.formation + '):'}"></h2>
+        <p th:text="${'Goalkeeper: ' + result.goalkeeper}"></p>
+        <p th:text="${'Defenders: ' + result.defenders}"></p>
+        <p th:text="${'Midfielders: ' + result.midfielders}"></p>
+        <p th:text="${'Forwards: ' + result.forwards}"></p>
+    </div>
+
+    <div th:if="${error}" class="error" style="background-color: white; color: red; padding: 20px; border-radius: 10px; box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); margin-top: 20px;">
+        <p th:text="${error}"></p>
+    </div>
+</div>
+</body>
+</html>
